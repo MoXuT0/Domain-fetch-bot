@@ -1,14 +1,13 @@
 package com.github.moxut0.msocial.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Getter
-@Setter
+@Data
 public class User {
 
   @Id
@@ -18,6 +17,7 @@ public class User {
   @Column(name = "chat_id")
   private long chatId;
 
+  @UpdateTimestamp
   @Column(name = "last_message_at", nullable = false)
   private Instant lastMessageAt;
 

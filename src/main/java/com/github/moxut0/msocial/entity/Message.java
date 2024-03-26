@@ -1,13 +1,11 @@
 package com.github.moxut0.msocial.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 public class Message {
 
   @Id

@@ -1,7 +1,7 @@
 package com.github.moxut0.msocial.listener;
 
 import com.github.moxut0.msocial.client.TelegramBotClient;
-import org.springframework.beans.factory.annotation.Value;
+import com.github.moxut0.msocial.config.BotConfig;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,15 +16,11 @@ import org.telegram.telegrambots.util.WebhookUtils;
 public class MSocialBot implements LongPollingBot {
 
   private final TelegramBotClient telegramBotClient;
-  private final String botToken;
-  private final String botUsername;
+  private final BotConfig botConfig;
 
-  public MSocialBot(TelegramBotClient telegramBotClient,
-                    @Value("${bot.token}") String botToken,
-                    @Value("${bot.username}") String botUsername) {
+  public MSocialBot(TelegramBotClient telegramBotClient, BotConfig botConfig) {
     this.telegramBotClient = telegramBotClient;
-    this.botToken = botToken;
-    this.botUsername = botUsername;
+    this.botConfig = botConfig;
   }
 
   @Override
@@ -32,7 +28,7 @@ public class MSocialBot implements LongPollingBot {
     if (update.hasMessage() && update.getMessage().hasText()) {
       switch (update.getMessage().getText()) {
         case "/start":
-            sendMessage(update.getMessage().getChatId(), "Hello!");
+          sendMessage(update.getMessage().getChatId(), "Hello!");
             break;
         default:
           sendMessage(update.getMessage().getChatId(), "I don't understand you");
@@ -53,12 +49,12 @@ public class MSocialBot implements LongPollingBot {
 
   @Override
   public String getBotUsername() {
-    return botUsername;
+    return botConfig.getName();
   }
 
   @Override
   public String getBotToken() {
-    return botToken;
+    return botConfig.getToken();
   }
 
   public void sendMessage(long chatId, String textToSend) {
