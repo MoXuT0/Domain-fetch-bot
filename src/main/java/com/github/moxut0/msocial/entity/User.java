@@ -1,24 +1,24 @@
 package com.github.moxut0.msocial.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "users")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-
-  @Column(name = "chat_id")
+  @Column(name = "chat_id", columnDefinition = "BIGINT", nullable = false)
   private long chatId;
 
-  @UpdateTimestamp
-  @Column(name = "last_message_at", nullable = false)
-  private Instant lastMessageAt;
+  @Column(name = "last_message_at", columnDefinition = "TIMESTAMP", nullable = false)
+  private LocalDateTime lastMessageAt;
 
 }
