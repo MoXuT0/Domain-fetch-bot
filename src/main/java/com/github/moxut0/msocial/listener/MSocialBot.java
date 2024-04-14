@@ -7,6 +7,7 @@ import com.github.moxut0.msocial.entity.User;
 import com.github.moxut0.msocial.service.DailyDomainService;
 import com.github.moxut0.msocial.service.MessageService;
 import com.github.moxut0.msocial.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class MSocialBot extends TelegramLongPollingBot {
 
@@ -64,6 +66,7 @@ public class MSocialBot extends TelegramLongPollingBot {
       }
       sendMessage(chatId, response);
       messageService.save(new Message(userOptional.get(), update.getMessage().getText(), response));
+      log.info("Received message: {}", update.getMessage().getText());
     }
   }
 
@@ -86,12 +89,11 @@ public class MSocialBot extends TelegramLongPollingBot {
     try {
       this.execute(sendMessage);
     } catch (TelegramApiException e) {
-      e.printStackTrace();
+      log.error("Error occurred: " + e.getMessage());
     }
   }
 
-  @Scheduled(cron = "0 0 12 * * ?", zone = "Europe/Moscow")
-  //@Scheduled(fixedRate = 30000, initialDelay = 10000)
+  @Scheduled(cron = "0 0 12 * * ?")
   @Async
   @Transactional
   public void massSendDomains () {
@@ -101,6 +103,7 @@ public class MSocialBot extends TelegramLongPollingBot {
     List<User> users = userService.getAll();
     users.forEach(user -> sendMessage(
             user.getChatId(), date + ". Собрано " + dailyDomains.size() + " доменов"));
+    log.info("Sent out " + dailyDomains.size() + " domains to " + users.size() + " users");
   }
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.moxut0.msocial.entity.DailyDomain;
 import com.github.moxut0.msocial.repository.DailyDomainRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DailyDomainService {
 
   private final DailyDomainRepository dailyDomainRepository;
@@ -31,6 +33,7 @@ public class DailyDomainService {
   }
 
   public void sendRequest() {
+    log.info("Domain request is starting");
     RestTemplate restTemplate = new RestTemplate();
     String jsonString = restTemplate.getForObject(URL, String.class);
     ObjectMapper mapper = new ObjectMapper();
@@ -38,8 +41,9 @@ public class DailyDomainService {
       dailyDomainRepository.deleteAll();
       List<DailyDomain> dailyDomains = mapper.readValue(jsonString, new TypeReference<>() {});
       dailyDomainRepository.saveAll(dailyDomains);
+      log.info("Domain request is completed");
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Error occurred: " + e.getMessage());
     }
   }
 }
