@@ -46,12 +46,13 @@ public class MSocialBot extends TelegramLongPollingBot {
   @Override
   public void onUpdateReceived(Update update) {
     long chatId = update.getMessage().getChatId();
+    String username = update.getMessage().getFrom().getUserName();
     if (update.hasMessage() && update.getMessage().hasText()) {
       Optional<User> userOptional = userService.getByChatId(chatId);
       if(userOptional.isEmpty()) {
-        User newUser = new User(chatId, LocalDateTime.now());
-        userService.save(newUser);
+        User newUser = new User(chatId, username, LocalDateTime.now());
         userOptional = Optional.of(newUser);
+        userService.save(newUser);
       } else {
         userService.update(userOptional.get());
       }

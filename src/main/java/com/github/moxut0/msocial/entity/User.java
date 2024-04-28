@@ -16,6 +16,9 @@ public class User {
   @Column(name = "chat_id", columnDefinition = "BIGINT", nullable = false)
   private long chatId;
 
+  @Column(name = "username", columnDefinition = "TEXT")
+  private String username;
+
   @Column(name = "last_message_at", columnDefinition = "TIMESTAMP", nullable = false)
   private LocalDateTime lastMessageAt;
 

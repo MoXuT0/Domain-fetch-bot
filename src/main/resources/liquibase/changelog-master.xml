@@ -8,5 +8,6 @@
   <include file="table/create-daily_domains-table.xml" relativeToChangelogFile="true"/>
   <include file="table/create-users-table.xml" relativeToChangelogFile="true"/>
   <include file="table/create-messages-table.xml" relativeToChangelogFile="true"/>
+  <include file="table/change-column-users-add-username" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
